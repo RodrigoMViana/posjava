@@ -1,14 +1,20 @@
 package br.com.contact;
 
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
+
 @Service
 public class ContactServiceImpl implements ContactService{
 
     @Autowired
     private ContactRepository contactRepository;
+    
+  
 
     @Override
     public void createContact(Contact contact) {
@@ -20,6 +26,14 @@ public class ContactServiceImpl implements ContactService{
     public void removeContact(Long id) {
         // remover um contact
         this.contactRepository.deleteById(id);
+    }
+    
+    @Override
+    public void updateContact(Long id, Contact contact) {
+    	Contact contactUpdate = contactRepository.findById(id).get();
+    	BeanUtils.copyProperties(contact, contactUpdate, "id");
+    	contactRepository.save(contactUpdate);
+    	
     }
 
     @Override
@@ -40,9 +54,4 @@ public class ContactServiceImpl implements ContactService{
         // listar todos os contacts
         return this.contactRepository.findAll();
     }
-
-    public void updateContact(Contact contact) {
-        this.contactRepository.save(contact);
-    }
-
 }

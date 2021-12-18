@@ -1,5 +1,6 @@
 package br.com.contact;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,16 +28,18 @@ public class ContactController {
     public void createContact(@RequestBody Contact contact){
         this.contactService.createContact(contact);
     }
-
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteContact(@RequestParam Long id){
-        this.contactService.removeContact(id);
+    
+    @PutMapping(value = "/{id}")
+    private void updateContact(@PathVariable("id") long id, @RequestBody Contact contact) {
+        this.contactService.updateContact(id, contact);
     }
 
-    @PutMapping
-    private void updateContact(@RequestBody Contact contact) {
-        this.contactService.updateContact(contact);
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteContact(@PathVariable("id") Long id){
+        this.contactService.removeContact(id);
+
     }
 
     @GetMapping("/find-by-name")
